@@ -1,0 +1,14 @@
+#!/usr/bin/env ruby -I lib
+# frozen_string_literal: true
+
+require 'password'
+
+puts Password::File
+  .new('input.txt')
+  .each_with_validator(Password::RangeRule)
+  .count(&:valid?)
+
+puts Password::File
+  .new('input.txt')
+  .each_with_validator(Password::PositionRule)
+  .count(&:valid?)
