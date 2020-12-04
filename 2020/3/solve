@@ -1,0 +1,21 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require 'forest'
+require 'course'
+
+forest = Forest.new('input.txt')
+
+course = Course.new(forest: forest, slope: Slope.new(right: 3, down: 1))
+
+puts format('encountered %d trees', course.trees)
+
+courses = [
+  Slope.new(right: 1, down: 1),
+  Slope.new(right: 3, down: 1),
+  Slope.new(right: 5, down: 1),
+  Slope.new(right: 7, down: 1),
+  Slope.new(right: 1, down: 2),
+].map { |slope| Course.new(forest: forest, slope: slope).trees }
+
+puts format('product of courses is %d', courses.reduce(:*))
