@@ -7,7 +7,7 @@ class Forest
 
   def initialize(filename)
     @filename = filename
-    @forest = File.readlines('input.txt').map { |line| line.strip.split('') }
+    @forest = File.readlines(filename).map { |line| line.strip.split('') }
   end
 
   def width
