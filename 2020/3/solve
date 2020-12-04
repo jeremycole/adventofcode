@@ -16,6 +16,6 @@ courses = [
   Slope.new(right: 5, down: 1),
   Slope.new(right: 7, down: 1),
   Slope.new(right: 1, down: 2),
-].map { |slope| Course.new(forest: forest, slope: slope).trees }
+].map { |slope| Course.new(forest: forest, slope: slope) }
 
-puts format('product of courses is %d', courses.reduce(:*))
+puts format('product of courses is %d', courses.map(&:trees).reduce(:*))
