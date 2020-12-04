@@ -11,11 +11,11 @@ course = Course.new(forest: forest, slope: Slope.new(right: 3, down: 1))
 puts format('encountered %d trees', course.trees)
 
 courses = [
-  Slope.new(right: 1, down: 1),
-  Slope.new(right: 3, down: 1),
-  Slope.new(right: 5, down: 1),
-  Slope.new(right: 7, down: 1),
-  Slope.new(right: 1, down: 2),
-].map { |slope| Course.new(forest: forest, slope: slope) }
+  [1, 1],
+  [3, 1],
+  [5, 1],
+  [7, 1],
+  [1, 2]
+].map { |right, down| Course.new(forest: forest, slope: Slope.new(right: right, down: down)) }
 
 puts format('product of courses is %d', courses.map(&:trees).reduce(:*))
