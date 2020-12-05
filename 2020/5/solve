@@ -1,0 +1,20 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require 'seat_file'
+
+seat_file = SeatFile.new('input.txt')
+
+puts format(
+  'highest seat id is %d',
+  seat_file.each_seat.map(&:seat_id).max
+)
+
+present_seat_ids = seat_file.each_seat.map(&:seat_id).sort
+possible_seat_ids = (present_seat_ids.min .. present_seat_ids.max).to_a
+missing_seat_ids = possible_seat_ids - present_seat_ids
+
+puts format(
+  'missing seat id is %d',
+  missing_seat_ids.first
+)
