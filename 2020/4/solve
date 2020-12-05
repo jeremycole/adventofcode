@@ -1,0 +1,14 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require 'passport_file'
+
+passport_file = PassportFile.new('input.txt')
+
+valid_passports_one = passport_file.each_record.count(&:valid_for_part_one?)
+
+puts "number of valid passports for part one: #{valid_passports_one}"
+
+valid_passports_two = passport_file.each_record.count(&:valid_for_part_two?)
+
+puts "number of valid passports for part two: #{valid_passports_two}"
