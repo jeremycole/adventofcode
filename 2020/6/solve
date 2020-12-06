@@ -1,0 +1,16 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require 'customs_file'
+
+customs_file = CustomsFile.new('input.txt')
+
+puts format(
+  'sum of unique answers is %d',
+  customs_file.each_group.map(&:unique_answers).map(&:size).reduce(:+)
+)
+
+puts format(
+  'sum of shared answers is %d',
+  customs_file.each_group.map(&:shared_answers).map(&:size).reduce(:+)
+)
