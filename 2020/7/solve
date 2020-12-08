@@ -1,0 +1,28 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require 'regulations'
+
+regulations = Regulations.new('input.txt')
+
+puts format(
+  'number of bags that could eventually contain shiny gold one is %d',
+  regulations.can_eventually_contain('shiny gold').size
+)
+
+def contents(regulations, color, bags=[], multiplier=1)
+  regulations.color(color).contains.each do |contained_color, contained_count|
+    bags << [contained_color, contained_count * multiplier]
+    contents(regulations, contained_color, bags, contained_count * multiplier)
+  end
+
+  bags
+end
+
+bags_inside =
+  contents(regulations, 'shiny gold')
+    .each_with_object(Hash.new(0)) { |(color, count), h| h[color] += count }
+    .values
+    .sum
+
+puts "number of bags inside a shiny gold bag is #{bags_inside}"
