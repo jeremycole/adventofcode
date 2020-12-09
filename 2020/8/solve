@@ -1,0 +1,28 @@
+#!/usr/bin/env ruby
+
+require 'computer'
+
+computer = Computer.new('input.txt')
+#computer.dump
+#computer.trace = true
+
+computer.step while computer.next_instruction&.executions&.zero?
+
+puts "accumulator before revisiting an instruction is #{computer.accumulator}"
+
+broken_pc = computer.last_pc
+
+computer.reset
+
+puts "fixing instruction at #{broken_pc}: #{computer.instructions[broken_pc]}"
+
+computer.instructions[broken_pc] =
+  if computer.instructions[broken_pc].is_a?(Instruction::Jmp)
+    Instruction::Nop.new(computer.instructions[broken_pc].operand)
+  else
+    Instruction::Jmp.new(computer.instructions[broken_pc].operand)
+  end
+
+computer.step while computer.next_instruction
+
+puts "accumulator after completion is #{computer.accumulator}"
