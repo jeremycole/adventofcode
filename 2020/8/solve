@@ -6,23 +6,32 @@ computer = Computer.new('input.txt')
 #computer.dump
 #computer.trace = true
 
-computer.step while computer.next_instruction&.executions&.zero?
+if computer.run
+  raise 'unexpectedly completed a run successfully without changing an instruction'
+end
 
 puts "accumulator before revisiting an instruction is #{computer.accumulator}"
 
-broken_pc = computer.last_pc
+instructions_to_repair =
+  computer
+    .instructions
+    .each_with_index
+    .select { |instruction, _| %i[jmp nop].include?(instruction.mnemonic) }
+    .map { |_, i| i }
 
-computer.reset
-
-puts "fixing instruction at #{broken_pc}: #{computer.instructions[broken_pc]}"
-
-computer.instructions[broken_pc] =
-  if computer.instructions[broken_pc].is_a?(Instruction::Jmp)
-    Instruction::Nop.new(computer.instructions[broken_pc].operand)
-  else
-    Instruction::Jmp.new(computer.instructions[broken_pc].operand)
+repairable_pcs =
+  instructions_to_repair.select do |pc|
+    computer.reset
+    computer.repair_instruction(pc)
+    computer.run
   end
 
-computer.step while computer.next_instruction
+if repairable_pcs.size != 1
+  raise "found more than one changeable instruction: #{repairable_pcs}"
+end
 
-puts "accumulator after completion is #{computer.accumulator}"
+broken_pc = repairable_pcs.first
+computer.reset
+computer.repair_instruction(broken_pc)
+computer.run
+puts "accumulator after repairing #{broken_pc} (to #{computer.instructions[broken_pc]}) is #{computer.accumulator}"

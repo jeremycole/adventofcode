@@ -52,4 +52,26 @@ class Computer
     self.pc += next_instruction.execute(self)
     output_trace
   end
+
+  def run
+    while next_instruction
+      return false unless next_instruction&.executions&.zero?
+
+      step
+    end
+
+    true
+  end
+
+  def repair_instruction(broken_pc)
+    instructions[broken_pc] =
+      case instructions[broken_pc].mnemonic
+      when :jmp
+        Instruction::Nop.new(instructions[broken_pc].operand)
+      when :nop
+        Instruction::Jmp.new(instructions[broken_pc].operand)
+      else
+        instructions[broken_pc]
+      end
+  end
 end

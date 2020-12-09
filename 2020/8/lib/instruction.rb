@@ -7,12 +7,12 @@ class Opcode
     @executions = 0
   end
 
+  def mnemonic
+    @mnemonic ||= self.class.name.split('::').last.downcase.to_sym
+  end
+
   def to_s
-    format('%s %+5d [%d]',
-      self.class.name.split('::').last.downcase,
-      operand,
-      executions
-    )
+    format('%s %+5d [%d]', mnemonic, operand, executions)
   end
 
   def execute(computer)
@@ -26,6 +26,7 @@ module Instruction
 
   class Jmp < Opcode
     def execute(computer)
+      super
       operand
     end
   end
