@@ -1,0 +1,36 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+def find_index_for_part_one(xmas)
+  (25...xmas.size).each do |n|
+    r = ((n - 25)..(n - 1)).to_a
+    set = r.product(r).map { |a, b| xmas[a] + xmas[b] unless a == b }.compact
+    next if set.include?(xmas[n])
+
+    return n
+  end
+
+  nil
+end
+
+def find_range_for_part_two(xmas, number)
+  (0...xmas.size).each do |i|
+    ((i + 1)...xmas.size).each do |j|
+      sum = xmas[i..j].sum
+      return i..j if sum == number
+
+      break if sum > number
+    end
+  end
+
+  nil
+end
+
+xmas = File.open('input.txt').readlines.map(&:to_i)
+
+part_one_index = find_index_for_part_one(xmas)
+puts "found invalid number #{xmas[part_one_index]} at index #{part_one_index}"
+
+part_two_range = find_range_for_part_two(xmas, xmas[part_one_index])
+puts "found range #{part_two_range}: #{xmas[part_two_range]} sum is #{xmas[part_two_range].sum}"
+puts "sum of min and max value is: #{xmas[part_two_range].min + xmas[part_two_range].max}"
