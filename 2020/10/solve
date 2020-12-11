@@ -1,0 +1,22 @@
+#!/usr/bin/env ruby
+
+SEQUENCE_PERMUTATIONS = {
+  1 => 1,
+  2 => 2,
+  3 => 4,
+  4 => 7
+}.freeze
+
+adapters = File.open('input.txt').readlines.map(&:strip).map(&:to_i).sort
+adapters = [0] + adapters + [adapters.max + 3]
+
+differences = (1...adapters.size).map { |i| adapters[i] - adapters[i-1] }
+difference_counts = differences.each_with_object(Hash.new(0)) { |d, h| h[d] += 1 }
+one_sequence_lengths = differences.join('').split('3').map(&:size).select(&:positive?)
+total_permutations = one_sequence_lengths.map { |n| SEQUENCE_PERMUTATIONS[n] }.reduce(:*)
+
+puts differences.to_s
+puts difference_counts[1] * difference_counts[3]
+
+
+puts total_permutations
