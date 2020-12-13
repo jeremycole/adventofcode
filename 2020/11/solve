@@ -1,0 +1,38 @@
+#!/usr/bin/env ruby
+
+require 'layout'
+
+def solve(filename)
+  layout = Layout.new(filename)
+
+  puts "Starting layout:"
+  layout.print
+
+  loop.each_with_index do |_, i|
+    puts "Re-arranging for round #{i}..."
+    seats_to_toggle = yield(layout)
+    break if seats_to_toggle.empty?
+
+    seats_to_toggle.each { |seat| seat.toggle }
+    layout.print
+  end
+
+  puts "Stable arrangement achieved:"
+  layout.print
+
+  puts "Count of seats occupied: #{layout.each_seat.select(&:occupied?).count}"
+end
+
+filename = 'input.txt'
+
+solve(filename) do |layout|
+  sleep(0.2)
+  layout.each_seat.select { |seat| seat.empty? && seat.adjacent.select(&:occupied?).none? } +
+    layout.each_seat.select { |seat| seat.occupied? && seat.adjacent.select(&:occupied?).count >= 4 }
+end
+
+solve(filename) do |layout|
+  sleep(0.2)
+  layout.each_seat.select { |seat| seat.empty? && seat.visible.select(&:occupied?).none? } +
+    layout.each_seat.select { |seat| seat.occupied? && seat.visible.select(&:occupied?).count >= 5 }
+end
