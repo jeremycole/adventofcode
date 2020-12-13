@@ -1,0 +1,30 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require 'ship'
+
+instructions = File.open('input.txt').readlines.map(&:strip)
+
+ship = Ship.new(facing: :E)
+instructions.each do |instruction|
+  ship.execute_for_part_one(instruction)
+end
+
+puts format(
+  'Part 1, ship ended at %+d, %+d: distance is %d',
+  ship.location.x,
+  ship.location.y,
+  ship.location.manhattan_distance
+)
+
+ship = Ship.new(waypoint: Vector.new(x: 10, y: 1))
+instructions.each do |instruction|
+  ship.execute_for_part_two(instruction)
+end
+
+puts format(
+  'Part 2, ship ended at %+d, %+d: distance is %d',
+  ship.location.x,
+  ship.location.y,
+  ship.location.manhattan_distance
+)
