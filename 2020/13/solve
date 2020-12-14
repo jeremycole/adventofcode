@@ -1,0 +1,61 @@
+#!/usr/bin/env ruby
+
+def euclid(a, b)
+  return [a, 1, 0] if b.zero?
+
+  d, y, x = euclid(b, a % b)
+  [d, x, y - (a / b) * x]
+end
+
+def crt(p1, p2)
+  a, m = p1
+  b, n = p2
+
+  return [-1, -1] if a < 0 || b < 0
+
+  d, _, _ = euclid(m, n)
+  return [-1, -1] if (a - b) % d != 0
+
+  _, _, y = euclid(m / d, n / d)
+  l = (a - b) / d
+  ret_mod = m / d * n
+  l %= ret_mod
+  ret = b + n * l * y
+  ret %= ret_mod
+
+  [ret, ret_mod]
+end
+
+def resolve(want)
+  want[1..].reduce(want[0]) { |ans, p| crt(ans, p) }
+end
+
+def check_bus_contest_answer(schedule, answer)
+  schedule
+    .each_with_index
+    .map { |s, i| s ? ((s - (answer % s)) % s) == i : nil }
+    .compact
+    .all?
+end
+
+file = File.open('input.txt')
+
+earliest_timestamp = file.readline.strip.to_i
+bus_schedule = file.readline.strip.split(',')
+bus_times = bus_schedule.reject { |t| t == 'x' }.map(&:to_i).sort
+earliest_bus, wait_time = bus_times.map { |t| [t, t - (earliest_timestamp % t)] }.min_by { |_, x| x }
+
+puts "The earliest bus id you can take is #{earliest_bus}, wait time is #{wait_time}."
+puts "Part one answer is: #{earliest_bus * wait_time}"
+
+bus_schedule_for_resolve = bus_schedule
+  .map { |t| t == 'x' ? nil : t.to_i }
+  .each_with_index
+  .map { |s, i| [s.nil? ? nil : (i.zero? ? 0 : (s-i) % s), s] }
+  .reject { |a, _| a.nil? }
+
+answer = resolve(bus_schedule_for_resolve)
+
+#puts "bus_schedule=#{bus_schedule}"
+#puts "bus_schedule=#{bus_schedule_for_resolve}"
+puts "Part two answer is: #{answer.first}"
