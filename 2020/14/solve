@@ -1,0 +1,16 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require 'loader'
+
+loader = Loader.load('input.txt') do |l, address, value|
+  l.load_value_to_address(address, value)
+end
+
+puts "Answer for part one: #{loader.memory.values.reduce(:+)}"
+
+loader = Loader.load('input.txt') do |l, address, value|
+  l.load_value_to_many_addresses(address, value)
+end
+
+puts "Answer for part two: #{loader.memory.values.reduce(:+)}"
