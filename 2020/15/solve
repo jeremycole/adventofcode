@@ -1,0 +1,18 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require 'game'
+
+[2020, 30000000].each do |nth|
+  game = Game.new([6,19,0,5,7,13,1])
+
+  game.each_number do |number, turn|
+    puts "Completed turn #{turn}..." if turn.positive? && (turn % (nth/10)).zero?
+    next unless turn == nth - 1
+
+    puts "The #{nth}th number is: #{number}"
+    puts
+
+    break
+  end
+end
