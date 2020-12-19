@@ -1,0 +1,26 @@
+#!/usr/bin/env ruby
+
+require 'notes'
+
+notes = Notes.new('input.txt')
+
+puts notes.nearby_tickets.flat_map(&:invalid_values).sum
+
+possible_field_names = notes.my_ticket.fields.size.times.map do |n|
+  notes.rules.valid_for?(notes.nearby_tickets.select(&:valid?).map { |t| t.field(n) }).map(&:name)
+end
+
+field_names = [nil] * possible_field_names.size
+loop do
+  possible_field_names.each_with_index.select { |pfn, _| pfn.size == 1 }.each do |_, i|
+    field_names[i] = possible_field_names[i].first
+  end
+
+  possible_field_names.each do |f|
+    field_names.compact.each { |n| f.delete(n) }
+  end
+
+  break unless field_names.any?(&:nil?)
+end
+
+puts field_names.each_with_index.map { |f, i| f.start_with?('departure') ? notes.my_ticket.field(i) : nil }.compact.reduce(:*)
