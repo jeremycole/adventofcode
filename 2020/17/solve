@@ -1,0 +1,29 @@
+#!/usr/bin/env ruby
+
+require 'pocket_dimension'
+
+p = PocketDimension.new('input.txt')
+
+puts "Before any cycles:"
+p.dump
+
+(1..6).each do |cycle|
+  puts
+  puts "Computing..."
+
+  cubes_and_active_neighbors = p.each_cube_and_active_neighbor_count.to_a
+
+  cubes_and_active_neighbors.each do |cube, active_neighbors|
+    case
+    when cube.active?
+      cube.status = [2, 3].include?(active_neighbors)
+    when cube.inactive?
+      cube.status = active_neighbors == 3
+    end
+  end
+
+  puts "After #{cycle} cycles:"
+  p.dump
+end
+
+puts "After 6 iterations, #{p.each_cube.count(&:active?)} cubes are active"
