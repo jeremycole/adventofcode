@@ -1,0 +1,6 @@
+require 'expression'
+
+expressions = File.open('input.txt').each_line.map { |line| Expression.parse_string(line) }
+
+puts "Sum of all expressions: #{expressions.map(&:to_i).reduce(:+)}"
+

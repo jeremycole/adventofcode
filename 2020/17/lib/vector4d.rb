@@ -1,14 +1,15 @@
 class Vector3d
-  attr_accessor :x, :y, :z
+  attr_accessor :x, :y, :z, :w
 
-  def initialize(x, y, z)
+  def initialize(x, y, z = 0, w = 0)
     @x = x
     @y = y
     @z = z
+    @w = w
   end
 
   def to_a
-    [x, y, z]
+    [x, y, z, w]
   end
 
   def hash
