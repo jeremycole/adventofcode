@@ -1,0 +1,8 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require 'transmission'
+
+transmission = Transmission.new('input.txt')
+
+puts "Valid messages in transmission: #{transmission.valid_messages(0).count}"
