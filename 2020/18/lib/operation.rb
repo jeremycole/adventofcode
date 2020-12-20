@@ -12,6 +12,6 @@ class Operation
   end
 
   def to_s
-    [a.to_s, op.to_s, b.to_s].join(' ')
+    ['(', a.to_s, op.to_s, b.to_s, ')'].join(' ')
   end
 end

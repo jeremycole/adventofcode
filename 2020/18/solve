@@ -1,6 +1,11 @@
 require 'expression'
 
-expressions = File.open('input.txt').each_line.map { |line| Expression.parse_string(line) }
+lines = File.open('input.txt').each_line.map(&:strip)
 
-puts "Sum of all expressions: #{expressions.map(&:to_i).reduce(:+)}"
+part_one_sum = lines.map { |line| Expression.parse_string(line) }.map(&:to_i).reduce(:+)
 
+puts "Sum of all expressions for part one: #{part_one_sum}"
+
+part_two_sum = lines.map { |line| Expression.parse_string(line, %i[+ *]) }.map(&:to_i).reduce(:+)
+
+puts "Sum of all expressions for part two: #{part_two_sum}"
