@@ -1,0 +1,51 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require 'image'
+
+MONSTER_DATA = [
+  '                  # ',
+  '#    ##    ##    ###',
+  ' #  #  #  #  #  #   '
+].map { |line| line.split('').map { |x| x == '#'} }.freeze
+
+MONSTER = ImageData.new(MONSTER_DATA)
+
+image = Image.new('input.txt')
+
+puts 'Part 1...'
+
+corner_tile_numbers = image.corner_tiles.map(&:number)
+
+puts "Found #{corner_tile_numbers.size} corner tiles: #{corner_tile_numbers.join(', ')}"
+
+product_of_corner_tile_numbers = corner_tile_numbers.reduce(:*)
+
+puts "Part 1 answer: Product of corner tiles: #{product_of_corner_tile_numbers}"
+puts
+
+puts 'Part 2...'
+
+puts 'Placing all image tiles in the field...'
+image.fill_field
+
+puts 'Reorienting image tiles...'
+image.reorient
+
+puts 'Building full image from tiles...'
+full_image = image.extract
+
+puts 'Looking for the monster in the full image...'
+transforms = Tile::POSSIBLE_ORIENTATIONS.map do |flip, rotate|
+  monsters_found = full_image.transform(flip, rotate).each_contained_image(MONSTER).to_a
+  puts "... with transform #{flip} and #{rotate}, found #{monsters_found.size} monsters"
+  [[flip, rotate], monsters_found]
+end
+
+(flip, rotate), monsters_found = transforms.select { |_, found| found.any? }.first
+
+puts "Found #{monsters_found.size} monsters in the image with transform #{flip} and #{rotate}!"
+
+roughness = image.extract.data.flatten.count(true) - (monsters_found.size * MONSTER.data.flatten.count(true))
+
+puts "Part 2 answer: Roughness of the sea: #{roughness}"
