@@ -1,4 +1,4 @@
-require 'vector3d'
+require 'vector4d'
 require 'cube'
 
 class PocketDimension
@@ -10,7 +10,7 @@ class PocketDimension
     dim = File.open(filename).readlines.map { |line| line.strip.split('').map { |x| x == '#' } }
     dim.each_with_index do |row, y|
       row.each_with_index do |value, x|
-        cube(Vector3d.new(x, y, 0), value)
+        cube(Vector4d.new(x, y, 0), value)
       end
     end
   end
@@ -32,15 +32,15 @@ class PocketDimension
     Range.new(*minmax(dimension, expansion))
   end
 
-  def range_xyz(expansion = 0)
-    %i[x y z].map { |d| range(d, expansion) }
+  def range_xyzw(expansion = 0)
+    %i[x y z w].map { |d| range(d, expansion) }
   end
 
-  def each_xyz_coordinate(expansion = 0)
-    return to_enum(:each_xyz_coordinate, expansion) unless block_given?
+  def each_xyzw_coordinate(expansion = 0)
+    return to_enum(:each_xyzw_coordinate, expansion) unless block_given?
 
-    range_xyz(expansion).reduce { |a, b| a.to_a.product(b.to_a) }.map { |a| a.flatten }.each do |x, y, z|
-      yield Vector3d.new(x, y, z)
+    range_xyzw(expansion).reduce { |a, b| a.to_a.product(b.to_a) }.map { |a| a.flatten }.each do |x, y, z, w|
+      yield Vector4d.new(x, y, z, w)
     end
   end
 
@@ -57,7 +57,7 @@ class PocketDimension
   def each_cube_and_active_neighbor_count
     return to_enum(:each_cube_and_active_neighbor_count) unless block_given?
 
-    each_xyz_coordinate(1).each do |c|
+    each_xyzw_coordinate(1).each do |c|
       this_cube = cube(c)
       yield this_cube, this_cube.neighbors.count { |n| n.status }
     end
@@ -66,15 +66,17 @@ class PocketDimension
   end
 
   def dump
-    range(:z).each do |z|
-      puts "z=#{z}:"
-      range(:y).each do |y|
-        range(:x).each do |x|
-          print cube(Vector3d.new(x, y, z))
+    range(:w).each do |w|
+      range(:z).each do |z|
+        puts "z=#{z}, w=#{w}:"
+        range(:y).each do |y|
+          range(:x).each do |x|
+            print cube(Vector4d.new(x, y, z))
+          end
+          puts
         end
         puts
       end
-      puts
     end
 
     nil

@@ -27,8 +27,8 @@ filename = 'input.txt'
 
 solve(filename) do |layout|
   sleep(0.2)
-  layout.each_seat.select { |seat| seat.empty? && seat.adjacent.select(&:occupied?).none? } +
-    layout.each_seat.select { |seat| seat.occupied? && seat.adjacent.select(&:occupied?).count >= 4 }
+  layout.each_seat.select { |seat| seat.empty? && seat.neighbors.select(&:occupied?).none? } +
+    layout.each_seat.select { |seat| seat.occupied? && seat.neighbors.select(&:occupied?).count >= 4 }
 end
 
 solve(filename) do |layout|

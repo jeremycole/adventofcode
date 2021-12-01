@@ -19,7 +19,7 @@ class Passport
   EXPECTED_FIELDS = VALIDATION_RULES.keys.sort.freeze
   REQUIRED_FIELDS = (EXPECTED_FIELDS - %i[cid]).freeze
 
-  attr_reader :data
+  attr_reader :image_data
 
   def initialize(data)
     @data = data

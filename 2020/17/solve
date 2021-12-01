@@ -9,7 +9,7 @@ p.dump
 
 (1..6).each do |cycle|
   puts
-  puts "Computing..."
+  puts "Computing for cycle #{cycle}..."
 
   cubes_and_active_neighbors = p.each_cube_and_active_neighbor_count.to_a
 
@@ -22,8 +22,8 @@ p.dump
     end
   end
 
-  puts "After #{cycle} cycles:"
-  p.dump
+  #puts "After #{cycle} cycles:"
+  #p.dump
 end
 
 puts "After 6 iterations, #{p.each_cube.count(&:active?)} cubes are active"

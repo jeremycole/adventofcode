@@ -1,4 +1,4 @@
-class Vector3d
+class Vector4d
   attr_accessor :x, :y, :z, :w
 
   def initialize(x, y, z = 0, w = 0)
@@ -13,11 +13,11 @@ class Vector3d
   end
 
   def hash
-    x.hash ^ y.hash ^ z.hash
+    x.hash ^ y.hash ^ z.hash ^ w.hash
   end
 
   def ==(other)
-    x == other.x && y == other.y && z == other.z
+    x == other.x && y == other.y && z == other.z && w == other.w
   end
 
   def eql?(other)
@@ -25,7 +25,7 @@ class Vector3d
   end
 
   def +(other)
-    Vector3d.new(x + other.x, y + other.y, z + other.z)
+    Vector4d.new(x + other.x, y + other.y, z + other.z, w + other.w)
   end
 
   def adjacent
@@ -38,14 +38,14 @@ class Vector3d
     ADJACENT_INCREMENTS
     .product(ADJACENT_INCREMENTS)
     .product(ADJACENT_INCREMENTS)
+    .product(ADJACENT_INCREMENTS)
     .map(&:flatten)
     .freeze
 
-  ADJACENT_OFFSETS = (SELF_AND_ADJACENT_OFFSETS - [[0, 0, 0]]).freeze
+  ADJACENT_OFFSETS = (SELF_AND_ADJACENT_OFFSETS - [[0, 0, 0, 0]]).freeze
 
   ADJACENT_VECTORS =
     ADJACENT_OFFSETS
-    .map { |x, y, z| Vector3d.new(x, y, z) }
+    .map { |x, y, z, w| Vector4d.new(x, y, z, w) }
     .freeze
-
 end

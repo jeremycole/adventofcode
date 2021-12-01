@@ -1,4 +1,4 @@
-require 'vector3d'
+require 'vector4d'
 
 class Cube
   attr_accessor :status

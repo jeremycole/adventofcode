@@ -1,0 +1,7 @@
+#!/usr/bin/env ruby
+
+require 'game'
+
+game = Game.new('input.txt')
+winner, score = game.play
+puts "game winner was #{winner}, score was #{score}"
