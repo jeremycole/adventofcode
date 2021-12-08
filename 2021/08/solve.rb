@@ -1,3 +1,5 @@
+#!/usr/bin/env ruby
+
 Data = Struct.new(:signals, :outputs)
 
 class Resolver
@@ -33,7 +35,7 @@ class Resolver
   end
 
   def lookup_by_pattern
-    @lookup_by_pattern = lookup_by_digit.invert
+    @lookup_by_pattern ||= lookup_by_digit.invert
   end
 
   def resolve(pattern)
@@ -50,11 +52,13 @@ data = File.open(input_file)
 
 summary = data.flat_map(&:outputs).map(&:size).tally
 
-puts "Answer for part 1: #{[2, 3, 4, 7].map { |l| summary[l] || 0 }.sum}"
+answer_part_1 = [2, 3, 4, 7].map { |l| summary[l] || 0 }.sum
+puts "Answer for part 1: #{answer_part_1}"
 
 solution = data.map do |d|
   resolver = Resolver.new(d.signals)
   d.outputs.map { |pattern| resolver.resolve(pattern) }
 end
 
-puts "Answer for part 2: #{solution.map { |x| x.map(&:to_s).join.to_i }.sum}"
+answer_part_2 = solution.map { |x| x.map(&:to_s).join.to_i }.sum
+puts "Answer for part 2: #{answer_part_2}"
