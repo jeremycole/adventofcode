@@ -19,30 +19,14 @@ class Heightmap
     (0...@width)
   end
 
-  def each_x
-    return enum_for(:each_x) unless block_given?
-
-    x_range.each { |x| yield x }
-
-    nil
-  end
-
   def y_range
     (0...@height)
-  end
-
-  def each_y
-    return enum_for(:each_y) unless block_given?
-
-    y_range.each { |y| yield y }
-
-    nil
   end
 
   def each_xy
     return enum_for(:each_xy) unless block_given?
 
-    each_y { |y| each_x { |x| yield x, y } }
+    y_range.each { |y| x_range.each { |x| yield x, y } }
 
     nil
   end
