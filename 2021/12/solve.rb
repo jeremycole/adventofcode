@@ -33,13 +33,14 @@ class Cave
     !start? && !end? && big?
   end
 
-  def find_paths(paths=[], path=[])
+  def find_paths(paths=[], path=[], max_small_cave_visits: 1)
     if end?
       paths.push(path + [self])
     else
       passages.each do |name, cave|
-        if !path.include?(cave) || cave.revisitable?
-          cave.find_paths(paths, path + [self])
+        small_revisit_remaining = ((path.select(&:small?).tally.values.max || 0) < max_small_cave_visits)
+        if !path.include?(cave) || cave.revisitable? || (cave.small? && small_revisit_remaining)
+          cave.find_paths(paths, path + [self], max_small_cave_visits: max_small_cave_visits)
         end
       end
     end
@@ -49,8 +50,11 @@ class Cave
 
   def dump(level=0, path=[])
     puts "#{"  " * level}cave: #{name}"
-    passages.each do |name, cave|
-      cave.dump(level+1, path + [self]) unless path.include?(cave)
+
+    unless end?
+      passages.each do |name, cave|
+        cave.dump(level+1, path + [self]) unless path.include?(cave)
+      end
     end
 
     nil
@@ -91,9 +95,17 @@ File.open(input_file).each_line do |line|
   exit_cave.connect(entry_name)
 end
 
-puts world.dump
+#puts world.dump
 
 paths = world.start.find_paths
 
-pp paths.map { |path| path.map(&:name).join(" -> ") }
+#pp paths.map { |path| path.map(&:name).join(" -> ") }
 puts "Answer to part 1: #{paths.size}"
+
+
+paths = world.start
+             .find_paths(max_small_cave_visits: 2)
+             .reject { |path| path.select(&:small?).tally.select { |cave, visits| visits > 1 }.size > 1 }
+
+#pp paths.map { |path| path.map(&:name).join(" -> ") }
+puts "Answer to part 2: #{paths.size}"
