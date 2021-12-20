@@ -164,7 +164,7 @@ image2 = original_image
 (1..50).each do |n|
   puts "Applying enhancement, iteration #{n}..."
   image2 = image2.enhance(enhancement)
-  puts image2.image; puts
+  #puts image2.image; puts
 end
 
 puts "Final image for part 2:"
